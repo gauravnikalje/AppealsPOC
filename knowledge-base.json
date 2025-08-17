@@ -1,0 +1,330 @@
+{
+  "ckd_terminology": {
+    "abbreviations": {
+      "CKD": "Chronic Kidney Disease",
+      "ESRD": "End Stage Renal Disease",
+      "GFR": "Glomerular Filtration Rate",
+      "eGFR": "Estimated Glomerular Filtration Rate",
+      "Cr": "Creatinine",
+      "BUN": "Blood Urea Nitrogen",
+      "CKD-EPI": "Chronic Kidney Disease Epidemiology Collaboration",
+      "MDRD": "Modification of Diet in Renal Disease",
+      "ACE": "Angiotensin-Converting Enzyme",
+      "ARB": "Angiotensin Receptor Blocker",
+      "RAS": "Renin-Angiotensin System",
+      "HTN": "Hypertension",
+      "DM": "Diabetes Mellitus",
+      "T2DM": "Type 2 Diabetes Mellitus",
+      "T1DM": "Type 1 Diabetes Mellitus",
+      "UACR": "Urine Albumin-to-Creatinine Ratio",
+      "ACR": "Albumin-to-Creatinine Ratio",
+      "UPCR": "Urine Protein-to-Creatinine Ratio",
+      "PCR": "Protein-to-Creatinine Ratio",
+      "RRT": "Renal Replacement Therapy",
+      "HD": "Hemodialysis",
+      "PD": "Peritoneal Dialysis",
+      "KT": "Kidney Transplant",
+      "AKI": "Acute Kidney Injury",
+      "CKD-MBD": "Chronic Kidney Disease-Mineral and Bone Disorder",
+      "PTH": "Parathyroid Hormone",
+      "Ca": "Calcium",
+      "P": "Phosphorus",
+      "Vit D": "Vitamin D",
+      "25-OH Vit D": "25-Hydroxyvitamin D",
+      "1,25-OH Vit D": "1,25-Dihydroxyvitamin D",
+      "PTH": "Parathyroid Hormone",
+      "ALP": "Alkaline Phosphatase",
+      "Hgb": "Hemoglobin",
+      "Hct": "Hematocrit",
+      "EPO": "Erythropoietin",
+      "ESA": "Erythropoiesis-Stimulating Agent",
+      "IV": "Intravenous",
+      "PO": "Oral",
+      "SC": "Subcutaneous",
+      "IM": "Intramuscular",
+      "BID": "Twice Daily",
+      "TID": "Three Times Daily",
+      "QID": "Four Times Daily",
+      "QD": "Once Daily",
+      "QOD": "Every Other Day",
+      "PRN": "As Needed",
+      "STAT": "Immediately",
+      "NPO": "Nothing by Mouth",
+      "BP": "Blood Pressure",
+      "HR": "Heart Rate",
+      "RR": "Respiratory Rate",
+      "O2": "Oxygen",
+      "SpO2": "Oxygen Saturation",
+      "WBC": "White Blood Cell Count",
+      "RBC": "Red Blood Cell Count",
+      "PLT": "Platelet Count",
+      "Na": "Sodium",
+      "K": "Potassium",
+      "Cl": "Chloride",
+      "CO2": "Carbon Dioxide",
+      "HCO3": "Bicarbonate",
+      "AnGap": "Anion Gap",
+      "LDL": "Low-Density Lipoprotein",
+      "HDL": "High-Density Lipoprotein",
+      "TG": "Triglycerides",
+      "TC": "Total Cholesterol",
+      "HbA1c": "Hemoglobin A1c",
+      "FSG": "Fasting Serum Glucose",
+      "PPG": "Postprandial Glucose",
+      "OGTT": "Oral Glucose Tolerance Test",
+      "CBC": "Complete Blood Count",
+      "CMP": "Comprehensive Metabolic Panel",
+      "BMP": "Basic Metabolic Panel",
+      "LFT": "Liver Function Test",
+      "PT": "Prothrombin Time",
+      "INR": "International Normalized Ratio",
+      "aPTT": "Activated Partial Thromboplastin Time",
+      "CRP": "C-Reactive Protein",
+      "ESR": "Erythrocyte Sedimentation Rate",
+      "ANA": "Antinuclear Antibody",
+      "ANCA": "Antineutrophil Cytoplasmic Antibody",
+      "Anti-GBM": "Anti-Glomerular Basement Membrane",
+      "C3": "Complement C3",
+      "C4": "Complement C4",
+      "CH50": "Total Hemolytic Complement",
+      "SPEP": "Serum Protein Electrophoresis",
+      "UPEP": "Urine Protein Electrophoresis",
+      "IFE": "Immunofixation Electrophoresis",
+      "FLC": "Free Light Chain",
+      "BNP": "B-Type Natriuretic Peptide",
+      "NT-proBNP": "N-Terminal Pro-B-Type Natriuretic Peptide",
+      "Trop": "Troponin",
+      "CK": "Creatine Kinase",
+      "CK-MB": "Creatine Kinase-Myocardial Band",
+      "LDH": "Lactate Dehydrogenase",
+      "AST": "Aspartate Aminotransferase",
+      "ALT": "Alanine Aminotransferase",
+      "GGT": "Gamma-Glutamyl Transferase",
+      "ALP": "Alkaline Phosphatase",
+      "TBil": "Total Bilirubin",
+      "DBil": "Direct Bilirubin",
+      "IBil": "Indirect Bilirubin",
+      "Alb": "Albumin",
+      "Glob": "Globulin",
+      "TP": "Total Protein",
+      "Fe": "Iron",
+      "TIBC": "Total Iron Binding Capacity",
+      "Ferritin": "Ferritin",
+      "Transferrin": "Transferrin",
+      "Transferrin Sat": "Transferrin Saturation",
+      "B12": "Vitamin B12",
+      "Folate": "Folate",
+      "TSH": "Thyroid Stimulating Hormone",
+      "T4": "Thyroxine",
+      "T3": "Triiodothyronine",
+      "FT4": "Free Thyroxine",
+      "FT3": "Free Triiodothyronine",
+      "PSA": "Prostate-Specific Antigen",
+      "CEA": "Carcinoembryonic Antigen",
+      "AFP": "Alpha-Fetoprotein",
+      "CA-125": "Cancer Antigen 125",
+      "CA-19-9": "Cancer Antigen 19-9",
+      "CA-15-3": "Cancer Antigen 15-3",
+      "PSA": "Prostate-Specific Antigen",
+      "CEA": "Carcinoembryonic Antigen",
+      "AFP": "Alpha-Fetoprotein",
+      "CA-125": "Cancer Antigen 125",
+      "CA-19-9": "Cancer Antigen 19-9",
+      "CA-15-3": "Cancer Antigen 15-3"
+    },
+    "stages": {
+      "CKD Stage 1": {
+        "description": "Kidney damage with normal or increased GFR",
+        "gfr_range": "≥90 mL/min/1.73m²",
+        "criteria": "Normal or increased GFR with evidence of kidney damage (e.g., proteinuria, hematuria, structural abnormalities)"
+      },
+      "CKD Stage 2": {
+        "description": "Kidney damage with mildly decreased GFR",
+        "gfr_range": "60-89 mL/min/1.73m²",
+        "criteria": "Mildly decreased GFR with evidence of kidney damage"
+      },
+      "CKD Stage 3a": {
+        "description": "Moderately decreased GFR",
+        "gfr_range": "45-59 mL/min/1.73m²",
+        "criteria": "Moderately decreased GFR"
+      },
+      "CKD Stage 3b": {
+        "description": "Moderately to severely decreased GFR",
+        "gfr_range": "30-44 mL/min/1.73m²",
+        "criteria": "Moderately to severely decreased GFR"
+      },
+      "CKD Stage 4": {
+        "description": "Severely decreased GFR",
+        "gfr_range": "15-29 mL/min/1.73m²",
+        "criteria": "Severely decreased GFR"
+      },
+      "CKD Stage 5": {
+        "description": "Kidney failure",
+        "gfr_range": "<15 mL/min/1.73m²",
+        "criteria": "Kidney failure requiring dialysis or transplantation"
+      }
+    },
+    "complications": {
+      "anemia": {
+        "description": "Low red blood cell count due to decreased erythropoietin production",
+        "symptoms": ["Fatigue", "Weakness", "Shortness of breath", "Pale skin", "Chest pain"],
+        "treatment": ["ESA therapy", "Iron supplementation", "Blood transfusions if severe"]
+      },
+      "mineral_bone_disorder": {
+        "description": "Abnormal calcium, phosphorus, and parathyroid hormone levels",
+        "symptoms": ["Bone pain", "Fractures", "Itching", "Muscle weakness"],
+        "treatment": ["Phosphate binders", "Vitamin D analogs", "Calcimimetics", "Parathyroidectomy if severe"]
+      },
+      "cardiovascular_disease": {
+        "description": "Increased risk of heart disease and stroke",
+        "risk_factors": ["Hypertension", "Diabetes", "Dyslipidemia", "Anemia", "Mineral bone disorder"],
+        "prevention": ["Blood pressure control", "Diabetes management", "Statin therapy", "Lifestyle modifications"]
+      },
+      "fluid_overload": {
+        "description": "Excess fluid retention due to decreased kidney function",
+        "symptoms": ["Edema", "Shortness of breath", "Hypertension", "Weight gain"],
+        "treatment": ["Sodium restriction", "Diuretics", "Dialysis if severe"]
+      },
+      "acidosis": {
+        "description": "Metabolic acidosis due to decreased acid excretion",
+        "symptoms": ["Fatigue", "Confusion", "Bone loss", "Muscle wasting"],
+        "treatment": ["Sodium bicarbonate", "Dietary modifications", "Dialysis if severe"]
+      }
+    }
+  },
+  "clinical_guidelines": {
+    "monitoring_frequency": {
+      "CKD_Stage_1_2": {
+        "gfr": "Annually",
+        "albuminuria": "Annually",
+        "blood_pressure": "Every 3-6 months",
+        "diabetes_control": "Every 3-6 months"
+      },
+      "CKD_Stage_3": {
+        "gfr": "Every 6-12 months",
+        "albuminuria": "Every 6-12 months",
+        "blood_pressure": "Every 3 months",
+        "diabetes_control": "Every 3 months",
+        "anemia": "Every 6-12 months",
+        "mineral_bone": "Every 6-12 months"
+      },
+      "CKD_Stage_4": {
+        "gfr": "Every 3-6 months",
+        "albuminuria": "Every 3-6 months",
+        "blood_pressure": "Every 1-3 months",
+        "diabetes_control": "Every 1-3 months",
+        "anemia": "Every 3-6 months",
+        "mineral_bone": "Every 3-6 months",
+        "nutrition": "Every 3-6 months"
+      },
+      "CKD_Stage_5": {
+        "gfr": "Every 1-3 months",
+        "albuminuria": "Every 1-3 months",
+        "blood_pressure": "Monthly",
+        "diabetes_control": "Monthly",
+        "anemia": "Every 1-3 months",
+        "mineral_bone": "Every 1-3 months",
+        "nutrition": "Every 1-3 months",
+        "dialysis_access": "As needed"
+      }
+    },
+    "treatment_targets": {
+      "blood_pressure": {
+        "target": "<130/80 mmHg",
+        "diabetic_patients": "<130/80 mmHg",
+        "proteinuria": "<125/75 mmHg"
+      },
+      "diabetes": {
+        "hba1c": "<7.0%",
+        "individualized": "Consider <8.0% in elderly or high-risk patients"
+      },
+      "lipid_management": {
+        "ldl": "<100 mg/dL",
+        "high_risk": "<70 mg/dL",
+        "statins": "Recommended for all CKD patients"
+      },
+      "anemia": {
+        "hemoglobin": "10-12 g/dL",
+        "iron_saturation": ">20%",
+        "ferritin": ">100 ng/mL"
+      },
+      "mineral_bone": {
+        "calcium": "8.4-10.2 mg/dL",
+        "phosphorus": "2.7-4.6 mg/dL",
+        "pth": "2-9 times upper limit of normal",
+        "vitamin_d": ">30 ng/mL"
+      }
+    },
+    "medication_adjustments": {
+      "ace_inhibitors": {
+        "monitoring": "Monitor GFR and potassium",
+        "adjustment": "Reduce dose or discontinue if GFR decreases >30% or potassium >5.5 mEq/L"
+      },
+      "metformin": {
+        "contraindication": "eGFR <30 mL/min/1.73m²",
+        "dose_reduction": "eGFR 30-45 mL/min/1.73m²: reduce dose by 50%"
+      },
+      "sulfonylureas": {
+        "risk": "Increased risk of hypoglycemia",
+        "monitoring": "Monitor blood glucose closely"
+      },
+      "insulin": {
+        "adjustment": "May need dose reduction as GFR decreases",
+        "monitoring": "Monitor for hypoglycemia"
+      },
+      "diuretics": {
+        "loop_diuretics": "May need higher doses in advanced CKD",
+        "thiazides": "Less effective when GFR <30 mL/min/1.73m²"
+      },
+      "antibiotics": {
+        "aminoglycosides": "Avoid or use with extreme caution",
+        "vancomycin": "Requires dose adjustment and monitoring",
+        "penicillins": "Generally safe, may need dose adjustment"
+      }
+    }
+  },
+  "appeal_criteria": {
+    "approval_indicators": {
+      "strong_evidence": [
+        "Documented GFR <15 mL/min/1.73m²",
+        "Dialysis dependence",
+        "Kidney transplant listing",
+        "Severe complications requiring immediate intervention",
+        "Clear progression despite optimal medical management"
+      ],
+      "moderate_evidence": [
+        "GFR 15-29 mL/min/1.73m² with complications",
+        "Significant proteinuria (>3.5 g/day)",
+        "Refractory hypertension despite multiple medications",
+        "Severe anemia requiring ESA therapy",
+        "Mineral bone disorder requiring treatment"
+      ]
+    },
+    "rejection_indicators": {
+      "clear_contraindications": [
+        "GFR >60 mL/min/1.73m² without complications",
+        "Reversible causes of kidney dysfunction",
+        "Insufficient documentation of kidney disease",
+        "Non-compliance with medical recommendations",
+        "Alternative treatments not attempted"
+      ],
+      "moderate_concerns": [
+        "GFR 30-59 mL/min/1.73m² without complications",
+        "Mild proteinuria (<1 g/day)",
+        "Controlled blood pressure and diabetes",
+        "Stable kidney function over time",
+        "Adequate response to medical therapy"
+      ]
+    },
+    "review_required": {
+      "ambiguous_cases": [
+        "GFR 30-44 mL/min/1.73m² with mild complications",
+        "Moderate proteinuria (1-3.5 g/day)",
+        "Incomplete medical records",
+        "Conflicting clinical findings",
+        "Recent changes in kidney function",
+        "Complex medical history with multiple comorbidities"
+      ]
+    }
+  }
+}
