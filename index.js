@@ -747,14 +747,14 @@ app.delete('/tasks/:id', async (req, res) => {
 });
 
 // Initialize database and start server
-(async () => {
+async function start() {
   try {
     await sequelize.authenticate();
     console.log('Database connection established successfully.');
-    
+
     await sequelize.sync();
     console.log('Database synced successfully. Tasks table created/updated.');
-    
+
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
       console.log(`Health check: http://localhost:${PORT}/health`);
@@ -771,6 +771,11 @@ app.delete('/tasks/:id', async (req, res) => {
     console.error('Startup error:', err);
     process.exit(1);
   }
-})();
+}
 
-module.exports = { sequelize, Task, app };
+// Only start when invoked directly
+if (require.main === module) {
+  start();
+}
+
+module.exports = { sequelize, Task, app, start };
