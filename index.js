@@ -7,9 +7,18 @@ const fs = require('fs');
 const path = require('path');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-// Initialize Gemini Pro
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || 'demo-key');
-const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+// Load environment variables from .env (if present)
+require('dotenv').config();
+
+// Initialize Gemini Pro (require valid API key)
+const _googleApiKey = process.env.GOOGLE_API_KEY;
+if (!_googleApiKey) {
+  console.error('Missing GOOGLE_API_KEY environment variable. Set it in .env or your environment and restart the server.');
+  process.exit(1);
+}
+
+const genAI = new GoogleGenerativeAI(_googleApiKey);
+const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-lite' });
 
 const app = express();
 app.use(express.json());
@@ -344,10 +353,43 @@ Focus on evidence-based decision making and provide clear rationale for your cla
       // Call Gemini Pro API
       const result = await model.generateContent(prompt);
       const response = await result.response;
-      const text = response.text();
-      
-      // Parse Gemini Pro response
-      const aiResponse = JSON.parse(text);
+      const text = await response.text();
+
+      // Helper: try to extract JSON from AI text (strip markdown/code fences)
+      function extractJSONFromText(t) {
+        if (!t || typeof t !== 'string') throw new SyntaxError('AI response is not text');
+        // Remove common markdown code fences
+        let cleaned = t.replace(/```\s*json\s*/gi, '');
+        cleaned = cleaned.replace(/```/g, '');
+        cleaned = cleaned.trim();
+
+        // Try to locate the first JSON object in the cleaned string
+        const firstBrace = cleaned.indexOf('{');
+        const lastBrace = cleaned.lastIndexOf('}');
+        if (firstBrace !== -1 && lastBrace !== -1 && lastBrace >= firstBrace) {
+          const candidate = cleaned.substring(firstBrace, lastBrace + 1);
+          try {
+            return JSON.parse(candidate);
+          } catch (e) {
+            // fallthrough to other heuristics
+          }
+        }
+
+        // Try to extract inside a ```json ... ``` block if present
+        const mdJson = t.match(/```json([\s\S]*?)```/i);
+        if (mdJson && mdJson[1]) {
+          const inner = mdJson[1].trim();
+          try { return JSON.parse(inner); } catch (e) {}
+        }
+
+        // As a last resort, throw with the raw text attached for debugging
+        const err = new SyntaxError('Unable to parse JSON from AI response');
+        err.raw = t;
+        throw err;
+      }
+
+      // Parse Gemini Pro response (robust extraction)
+      const aiResponse = extractJSONFromText(text);
       
       decisionMetadata = {
         decision: aiResponse.decision,
@@ -372,6 +414,9 @@ Focus on evidence-based decision making and provide clear rationale for your cla
       };
       
     } catch (aiError) {
+      if (aiError && aiError.raw) {
+        console.error('Gemini Pro API parsing error. Raw AI output:\n', aiError.raw);
+      }
       console.error('Gemini Pro API error:', aiError);
       
       // Fallback to rule-based decision logic
