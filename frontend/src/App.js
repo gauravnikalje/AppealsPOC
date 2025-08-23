@@ -31,20 +31,31 @@ function App() {
     formData.append('document', file);
 
     try {
-  const response = await fetch(`${API_BASE}/upload`, {
+      const response = await fetch(`${API_BASE}/upload`, {
         method: 'POST',
         body: formData,
       });
 
-      const result = await response.json();
+      // Try parse JSON, but fall back to raw text to surface server errors
+      let result;
+      try {
+        result = await response.json();
+      } catch (parseErr) {
+        const raw = await response.text();
+        // show raw server response when JSON parsing fails
+        throw new Error(`Server returned non-JSON response: ${raw}`);
+      }
+
       if (response.ok) {
         setUploadResult(result);
         setActiveTab('results');
       } else {
-        alert('Upload failed: ' + result.error);
+        alert('Upload failed: ' + (result.error || JSON.stringify(result)));
       }
     } catch (error) {
-      alert('Upload failed: ' + error.message);
+      // show full error message (including the raw server response when available)
+      alert('Upload failed: ' + (error.message || error));
+      console.error('Upload error details:', error);
     } finally {
       setUploading(false);
     }
@@ -58,7 +69,7 @@ function App() {
 
     setAnalyzing(true);
     try {
-  const response = await fetch(`${API_BASE}/analyze`, {
+      const response = await fetch(`${API_BASE}/analyze`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,15 +80,23 @@ function App() {
         }),
       });
 
-      const result = await response.json();
+      let result;
+      try {
+        result = await response.json();
+      } catch (parseErr) {
+        const raw = await response.text();
+        throw new Error(`Server returned non-JSON response: ${raw}`);
+      }
+
       if (response.ok) {
         setAnalysisResult(result);
         setActiveTab('decision');
       } else {
-        alert('Analysis failed: ' + result.error);
+        alert('Analysis failed: ' + (result.error || JSON.stringify(result)));
       }
     } catch (error) {
-      alert('Analysis failed: ' + error.message);
+      alert('Analysis failed: ' + (error.message || error));
+      console.error('Analyze error details:', error);
     } finally {
       setAnalyzing(false);
     }
