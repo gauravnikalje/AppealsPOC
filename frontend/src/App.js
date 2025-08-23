@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 function App() {
   // API base: set REACT_APP_API_URL for local dev (e.g. http://localhost:3001),
-  // otherwise default to same origin so deployed app uses /api/* routes.
-  const API_BASE = process.env.REACT_APP_API_URL || '';
+  // otherwise default to '/api' so deployed app calls the serverless endpoints.
+  const API_BASE = process.env.REACT_APP_API_URL || '/api';
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadResult, setUploadResult] = useState(null);
