@@ -11,9 +11,17 @@ function App() {
   const [analysisResult, setAnalysisResult] = useState(null);
   const [activeTab, setActiveTab] = useState('upload');
 
+  // Max upload size for Vercel serverless functions ~4.5MB; use a safe limit
+  const MAX_UPLOAD_BYTES = 4.5 * 1024 * 1024;
+
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile && (selectedFile.type === 'application/pdf' || selectedFile.type === 'text/plain')) {
+      if (selectedFile.size > MAX_UPLOAD_BYTES) {
+        alert(`Selected file is too large (${(selectedFile.size/1024/1024).toFixed(2)} MB). Maximum allowed is ${(MAX_UPLOAD_BYTES/1024/1024).toFixed(2)} MB for this deployment.`);
+        setFile(null);
+        return;
+      }
       setFile(selectedFile);
     } else {
       alert('Please select a PDF or text file');
