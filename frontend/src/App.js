@@ -36,13 +36,13 @@ function App() {
         body: formData,
       });
 
-      // Try parse JSON, but fall back to raw text to surface server errors
+      // Read body as text first, then try to parse JSON. This avoids
+      // "body stream already read" errors and lets us show raw server output.
+      const raw = await response.text();
       let result;
       try {
-        result = await response.json();
+        result = raw ? JSON.parse(raw) : {};
       } catch (parseErr) {
-        const raw = await response.text();
-        // show raw server response when JSON parsing fails
         throw new Error(`Server returned non-JSON response: ${raw}`);
       }
 
@@ -80,11 +80,11 @@ function App() {
         }),
       });
 
+      const raw = await response.text();
       let result;
       try {
-        result = await response.json();
+        result = raw ? JSON.parse(raw) : {};
       } catch (parseErr) {
-        const raw = await response.text();
         throw new Error(`Server returned non-JSON response: ${raw}`);
       }
 
