@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 
 function App() {
+  // API base: set REACT_APP_API_URL for local dev (e.g. http://localhost:3001),
+  // otherwise default to same origin so deployed app uses /api/* routes.
+  const API_BASE = process.env.REACT_APP_API_URL || '';
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadResult, setUploadResult] = useState(null);
@@ -28,7 +31,7 @@ function App() {
     formData.append('document', file);
 
     try {
-      const response = await fetch('http://localhost:3001/upload', {
+  const response = await fetch(`${API_BASE}/upload`, {
         method: 'POST',
         body: formData,
       });
@@ -55,7 +58,7 @@ function App() {
 
     setAnalyzing(true);
     try {
-      const response = await fetch('http://localhost:3001/analyze', {
+  const response = await fetch(`${API_BASE}/analyze`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

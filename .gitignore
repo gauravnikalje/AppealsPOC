@@ -67,3 +67,4 @@ logs
 
 # Database files (keep for development)
 # database.sqlite
+.vercel
