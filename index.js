@@ -22,7 +22,9 @@ const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-lite' });
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+// CORS: honor explicit origin if provided
+const corsOrigin = process.env.CORS_ORIGIN || '*';
+app.use(cors({ origin: corsOrigin }));
 const PORT = process.env.PORT || 3001;
 
 // Configure multer for file uploads
@@ -77,34 +79,149 @@ function loadKnowledgeBase() {
 // Initialize knowledge base
 knowledgeBase = loadKnowledgeBase();
 
-// Initialize Sequelize with SQLite
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: 'database.sqlite'
-});
+// Initialize Sequelize with Supabase PostgreSQL
+let sequelize = null;
+let Task = null;
+let usingInMemoryTasks = false;
 
-// Define the Task Model
-const Task = sequelize.define('Task', {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
-  },
-  title: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  description: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
-  completed: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: false
+// Get Supabase configuration from environment variables
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY;
+const databaseUrl = process.env.DATABASE_URL;
+
+try {
+  // Use DATABASE_URL if available (for direct PostgreSQL connection)
+  // Otherwise, construct from Supabase credentials
+  let connectionConfig;
+  
+  if (databaseUrl) {
+    const isSupabase = databaseUrl.includes('supabase.co');
+    const sslRequired = process.env.PGSSLMODE === 'require' || isSupabase;
+
+    // Prefer URI-style initialization when DATABASE_URL is provided
+    sequelize = new Sequelize(databaseUrl, {
+      dialect: 'postgres',
+      dialectOptions: sslRequired
+        ? { ssl: { require: true, rejectUnauthorized: false } }
+        : {},
+      logging: false
+    });
+  } else if (supabaseUrl && supabaseKey) {
+    // Extract database connection details from Supabase URL
+    const url = new URL(supabaseUrl);
+    const host = url.hostname;
+    const port = url.port || 5432;
+    
+    const sslRequired = true; // Supabase requires SSL over the public internet
+
+    connectionConfig = {
+      host: host,
+      port: port,
+      database: 'postgres',
+      username: 'postgres',
+      password: supabaseKey,
+      dialect: 'postgres',
+      dialectOptions: sslRequired
+        ? { ssl: { require: true, rejectUnauthorized: false } }
+        : {},
+      logging: false
+    };
+  } else {
+    throw new Error('Missing Supabase configuration. Please set SUPABASE_URL and SUPABASE_ANON_KEY or DATABASE_URL environment variables.');
   }
-}, {
-  timestamps: true
-});
+
+  // If we reached here using the object form (Supabase URL + key), initialize now
+  if (!sequelize) {
+    sequelize = new Sequelize(connectionConfig);
+  }
+
+  // Define the Task Model using Sequelize
+  Task = sequelize.define('Task', {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    completed: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    }
+  }, {
+    timestamps: true,
+    tableName: 'tasks'
+  });
+
+  // Test database connection and sync
+  sequelize.authenticate()
+    .then(() => {
+      console.log('Database connection established successfully.');
+      return sequelize.sync({ alter: true });
+    })
+    .then(() => {
+      console.log('Database synced successfully. Tasks table created/updated.');
+    })
+    .catch(err => {
+      console.error('Database connection failed:', err.message);
+      throw err;
+    });
+
+  console.log('Sequelize (PostgreSQL/Supabase) initialized');
+} catch (err) {
+  // Fallback to in-memory store if database connection fails
+  console.warn('PostgreSQL/Sequelize initialization failed - falling back to in-memory store. Error:', err.message);
+  usingInMemoryTasks = true;
+
+  // Simple in-memory Task store that mirrors the minimal Sequelize API used by the routes
+  (function createInMemoryTaskStore() {
+    const store = new Map();
+    let idSeq = 1;
+
+    Task = {
+      create: async (data) => {
+        const id = idSeq++;
+        const now = new Date();
+        const task = {
+          id,
+          title: data.title,
+          description: data.description || null,
+          completed: data.completed || false,
+          createdAt: now,
+          updatedAt: now,
+          // instance methods expected by some handlers
+          update: async function (upd) {
+            if (upd.title !== undefined) this.title = upd.title;
+            if (upd.description !== undefined) this.description = upd.description;
+            if (upd.completed !== undefined) this.completed = upd.completed;
+            this.updatedAt = new Date();
+            store.set(this.id, this);
+            return this;
+          },
+          destroy: async function () {
+            store.delete(this.id);
+          }
+        };
+        store.set(id, task);
+        return task;
+      },
+      findAll: async (opts) => {
+        // mimic ordering by createdAt DESC if requested
+        const arr = Array.from(store.values()).sort((a, b) => b.createdAt - a.createdAt);
+        return arr;
+      },
+      findByPk: async (id) => {
+        return store.get(Number(id)) || null;
+      }
+    };
+  })();
+}
 
 // Basic route for testing
 app.get('/', (req, res) => {
@@ -124,9 +241,10 @@ app.get('/health', (req, res) => {
       cacheValid: knowledgeBaseCache && (Date.now() - lastLoadTime) < CACHE_DURATION,
       lastLoadTime: new Date(lastLoadTime).toISOString()
     },
-    database: {
-      connected: true // SQLite is file-based, so always connected
-    }
+      database: {
+        connected: !!sequelize,
+        usingInMemoryTasks: !!usingInMemoryTasks
+      }
   };
   
   res.json(healthData);
@@ -749,11 +867,15 @@ app.delete('/tasks/:id', async (req, res) => {
 // Initialize database and start server
 async function start() {
   try {
-    await sequelize.authenticate();
-    console.log('Database connection established successfully.');
+    if (sequelize) {
+      await sequelize.authenticate();
+      console.log('Database connection established successfully.');
 
-    await sequelize.sync();
-    console.log('Database synced successfully. Tasks table created/updated.');
+      await sequelize.sync();
+      console.log('Database synced successfully. Tasks table created/updated.');
+    } else {
+      console.log('Skipping database initialization; using in-memory task store');
+    }
 
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);

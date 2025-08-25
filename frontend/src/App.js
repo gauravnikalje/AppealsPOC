@@ -11,7 +11,7 @@ function App() {
   const [analysisResult, setAnalysisResult] = useState(null);
   const [activeTab, setActiveTab] = useState('upload');
 
-  // Max upload size for Vercel serverless functions ~4.5MB; use a safe limit
+  // Max upload size for Vercel serverless functions ~4.5MB;
   const MAX_UPLOAD_BYTES = 4.5 * 1024 * 1024;
 
   const handleFileChange = (e) => {

@@ -19,7 +19,7 @@ The CKD Appeals AI system addresses the critical pain point of manual, inconsist
 - **RAG System**: Medical abbreviation expansion and knowledge retrieval
 - **Decision Engine**: Tri-state classification with confidence scoring
 - **API Endpoints**: RESTful APIs for all functionality
-- **Database**: SQLite with Sequelize ORM
+- **Database**: PostgreSQL with Supabase (cloud-hosted)
 - **Audit System**: JSON-based logging for compliance
 
 ### Frontend (React + Tailwind CSS)
@@ -41,6 +41,8 @@ The CKD Appeals AI system addresses the critical pain point of manual, inconsist
 ### Prerequisites
 - Node.js 16+ 
 - npm or yarn
+- Supabase account (for database)
+- Google AI API key (for Gemini)
 
 ### Installation
 
@@ -51,6 +53,12 @@ npm install
 cd frontend
 npm install
 ```
+
+2. **Set up environment variables:**
+   - Copy `env.example` to `.env`
+   - Add your Google AI API key
+   - Add your Supabase database URL
+   - See `SUPABASE_SETUP.md` for detailed instructions
 
 2. **Start the backend server:**
 ```bash
@@ -63,6 +71,9 @@ npm start
 cd frontend
 npm start
 ```
+
+Note for local development:
+- Create `frontend/.env` with `REACT_APP_API_URL=http://localhost:3001` so the React app talks to your local backend instead of `/api`.
 
 4. **Access the application:**
 - Frontend: http://localhost:3000
@@ -173,10 +184,12 @@ ckd-appeals-ai/
 ```
 
 ### Key Technologies
-- **Backend**: Node.js, Express, Sequelize, SQLite
+- **Backend**: Node.js, Express, Sequelize, PostgreSQL
 - **Frontend**: React, Tailwind CSS
+- **Database**: Supabase (PostgreSQL)
 - **Document Processing**: pdf-parse, multer
 - **Knowledge Base**: JSON-based RAG system
+- **AI**: Google Gemini 2.0 Flash Lite
 - **Testing**: Custom integration test suite
 
 ## 🚀 Deployment
@@ -198,10 +211,14 @@ cd frontend && npm start
 
 ### Environment Variables
 ```bash
-PORT=3001                    # Backend port
-NODE_ENV=production          # Environment
-CORS_ORIGIN=http://localhost:3000  # Frontend URL
+GOOGLE_API_KEY=your_google_api_key_here     # Google AI API key
+DATABASE_URL=your_supabase_database_url      # Supabase PostgreSQL URL
+PORT=3001                                    # Backend port
+NODE_ENV=production                          # Environment
+CORS_ORIGIN=http://localhost:3000            # Frontend URL
 ```
+
+See `SUPABASE_SETUP.md` for detailed setup instructions.
 
 ## 🤝 Contributing
 
