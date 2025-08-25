@@ -1,5 +1,5 @@
-const serverless = require('serverless-http');
-const { app, start } = require('../index');
+const { app } = require('../index');
 
-// For serverless platforms, export the handler
-module.exports.handler = serverless(app);
+// Export the Express app directly for @vercel/node
+// Vercel expects a default export that is a function/server
+module.exports = app;
