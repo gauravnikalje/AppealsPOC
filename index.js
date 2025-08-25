@@ -167,7 +167,7 @@ try {
     tableName: 'tasks'
   });
 
-  // Test database connection and sync
+  // Test database connection and sync (non-fatal in serverless)
   sequelize.authenticate()
     .then(() => {
       console.log('Database connection established successfully.');
@@ -177,8 +177,43 @@ try {
       console.log('Database synced successfully. Tasks table created/updated.');
     })
     .catch(err => {
-      console.error('Database connection failed:', err.message);
-      throw err;
+      console.warn('Database connection failed - using in-memory tasks:', err.message);
+      usingInMemoryTasks = true;
+      // Create in-memory Task store fallback
+      (function createInMemoryTaskStore() {
+        const store = new Map();
+        let idSeq = 1;
+
+        Task = {
+          create: async (data) => {
+            const id = idSeq++;
+            const now = new Date();
+            const task = {
+              id,
+              title: data.title,
+              description: data.description || null,
+              completed: data.completed || false,
+              createdAt: now,
+              updatedAt: now,
+              update: async function (upd) {
+                if (upd.title !== undefined) this.title = upd.title;
+                if (upd.description !== undefined) this.description = upd.description;
+                if (upd.completed !== undefined) this.completed = upd.completed;
+                this.updatedAt = new Date();
+                store.set(this.id, this);
+                return this;
+              },
+              destroy: async function () {
+                store.delete(this.id);
+              }
+            };
+            store.set(id, task);
+            return task;
+          },
+          findAll: async () => Array.from(store.values()).sort((a, b) => b.createdAt - a.createdAt),
+          findByPk: async (id) => store.get(Number(id)) || null
+        };
+      })();
     });
 
   console.log('Sequelize (PostgreSQL/Supabase) initialized');
