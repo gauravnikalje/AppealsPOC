@@ -33,7 +33,6 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
 const PORT = process.env.PORT || 3001;
 
 // Configure multer for file uploads
