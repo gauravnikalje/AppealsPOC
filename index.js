@@ -24,10 +24,16 @@ const genAI = new GoogleGenerativeAI(_googleApiKey);
 const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash-lite' });
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '5mb' }));
 // CORS: honor explicit origin if provided
 const corsOrigin = process.env.CORS_ORIGIN || '*';
-app.use(cors({ origin: corsOrigin }));
+const corsOptions = {
+  origin: corsOrigin,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 const PORT = process.env.PORT || 3001;
 
 // Configure multer for file uploads
@@ -35,7 +41,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ 
   storage: storage,
   limits: {
-    fileSize: 10 * 1024 * 1024 // 10MB limit
+    fileSize: 4.5 * 1024 * 1024 // align with Vercel default limits
   },
   fileFilter: (req, file, cb) => {
     if (file.mimetype === 'application/pdf' || file.mimetype === 'text/plain') {
@@ -363,6 +369,12 @@ function extractClinicalData(text) {
 // POST /upload - Upload and process documents
 app.post('/upload', upload.single('document'), async (req, res) => {
   try {
+    // Immediate heartbeat for debugging slow responses
+    console.log('Upload hit:', {
+      hasFile: !!req.file,
+      mime: req.file?.mimetype,
+      size: req.file?.size
+    });
     if (!req.file) {
       return res.status(400).json({
         error: 'No file uploaded'
@@ -401,14 +413,16 @@ app.post('/upload', upload.single('document'), async (req, res) => {
       clinicalDataExtracted: Object.keys(clinicalData).filter(key => clinicalData[key] !== null && clinicalData[key] !== false).length
     };
     
-    res.status(200).json({
+    const payload = {
       message: 'Document processed successfully',
       filename: req.file.originalname,
       extractedText: extractedText.substring(0, 500) + (extractedText.length > 500 ? '...' : ''),
       expandedData: expandedData,
       clinicalData: clinicalData,
       auditEntry: auditEntry
-    });
+    };
+    console.log('Upload success:', { filename: payload.filename, len: extractedText.length });
+    res.status(200).json(payload);
     
   } catch (error) {
     console.error('Error processing document:', error);
