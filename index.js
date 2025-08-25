@@ -1,5 +1,8 @@
 const express = require('express');
 const { Sequelize, DataTypes } = require('sequelize');
+// Force bundling of Postgres drivers in serverless environment
+const pg = require('pg');
+const pgHstore = require('pg-hstore');
 const multer = require('multer');
 const pdfParse = require('pdf-parse');
 const cors = require('cors');
