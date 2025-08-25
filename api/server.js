@@ -1,5 +1,8 @@
-const { app } = require('../index');
+const express = require('express');
+const { app: coreApp } = require('../index');
 
-// Export the Express app directly for @vercel/node
-// Vercel expects a default export that is a function/server
-module.exports = app;
+// In Vercel, requests come in as /api/..., so mount our core Express app at /api
+const server = express();
+server.use('/api', coreApp);
+
+module.exports = server;
